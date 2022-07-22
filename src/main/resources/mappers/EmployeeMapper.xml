@@ -74,7 +74,7 @@
 				, EMPLOYEE_POSITION 	AS "employeePosition"
 				, EMPLOYEE_SALARY 		AS "employeeSalary"
 			FROM EMPLOYEES
-			LIMIT #{LIMIT} OFFSET #{OFFSET}
+			LIMIT #{pageSize} OFFSET #{pageNumber}
 		]]>
 	</select>
 	
@@ -93,7 +93,7 @@
 				, FIRST_NAME 			AS "firstName"
 				, LAST_NAME 			AS "lastName"
 				, GENDER 				AS "gender"
-				
+				, PASSWORD				AS "password"
 				, ADDRESS 				AS "address"
 				, EMAIL_ADDRESS 		AS "emailAddress"
 				, JOIN_DATE 			AS "joinDate"
