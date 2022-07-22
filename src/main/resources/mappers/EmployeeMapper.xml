@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ems.management.dao.EmployeeDao">
+	
+	<resultMap type="EmployeeModel" id="EmployeeModel"/>
+	
+	<insert id="registerEmployee" parameterType="EmployeeModel">
+		<![CDATA[
+			INSERT INTO EMPLOYEES 
+			(
+				FIRST_NAME,
+				LAST_NAME,
+				PASSWORD,
+				GENDER,
+				ADDRESS,
+				EMAIL_ADDRESS,
+				CREATED_AT,
+				UPDATED_AT,
+				DELETED_AT,
+				JOIN_DATE,
+				EMPLOYEE_SALARY,
+				EMPLOYEE_POSITION
+			)
+			VALUES
+			(
+				COALESCE (#{firstName}, '')
+				, COALESCE (#{lastName}, '')
+				, COALESCE (#{password}, '')
+				, COALESCE (#{gender}, '')
+				, COALESCE (#{address}, '')
+				, COALESCE (#{emailAddress}, '')
+				, CURRENT_TIMESTAMP
+				, COALESCE (#{updatedAt}, '')
+				, COALESCE (#{deletedAt}, '')
+				, CURRENT_DATE
+				, COALESCE (#{employeeSalary}, 0)
+				, COALESCE (#{employeePosition}, '')
+			)
+		]]>
+	</insert>
+	
+	<update id="updateEmployee" parameterType="EmployeeModel">
+		<![CDATA[
+			UPDATE EMPLOYEES 
+			SET 
+			FIRST_NAME 		        = COALESCE (#{firstName}        , '')
+			, LAST_NAME 	        = COALESCE (#{lastName}         , '')
+			, PASSWORD 		        = COALESCE (#{password}         , '')
+			, GENDER 		        = COALESCE (#{gender}           , '')
+			, ADDRESS 		        = COALESCE (#{address}          , '')
+			, EMAIL_ADDRESS         = COALESCE (#{emailAddress}     , '')
+			, CREATED_AT 	        = COALESCE (#{created_at}       , '')
+			, UPDATED_AT 	        = CURRENT_TIMESTAMP 
+			, DELETED_AT 			= COALESCE (#{deleted_at}       , '')
+			, JOIN_DATE 			= COALESCE (#{joinDate}         , '')
+			, EMPLOYEE_SALARY 		= COALESCE (#{employeeSalary}	, 0)
+			, EMPLOYEE_POSITION     = COALESCE (#{employeePosition} , '')
+			WHERE ID = #{id}
+		]]>
+	</update>
+	
+	<select id="retrieveEmployeeList" resultType="EmployeeModel">
+		<![CDATA[
+			SELECT 
+				ID    					AS "id"
+				, FIRST_NAME 			AS "firstName"
+				, LAST_NAME 			AS "lastName"
+				, GENDER 				AS "gender"
+				
+				, ADDRESS 				AS "address"
+				, EMAIL_ADDRESS 		AS "emailAddress"
+				, JOIN_DATE 			AS "joinDate"
+				, EMPLOYEE_POSITION 	AS "employeePosition"
+				, EMPLOYEE_SALARY 		AS "employeeSalary"
+			FROM EMPLOYEES
+			LIMIT #{LIMIT} OFFSET #{OFFSET}
+		]]>
+	</select>
+	
+	<update id="deleteEmployee" parameterType="EmployeeModel">
+		<![CDATA[
+			UPDATE EMPLOYEES
+			SET DELETED_AT = CURRENT_TIMESTAMP 
+			WHERE ID = #{id}
+		]]>
+	</update>
+	
+	<select id="retrieveEmployeeDetail" resultType="EmployeeModel">
+		<![CDATA[
+			SELECT 
+				ID    					AS "id"
+				, FIRST_NAME 			AS "firstName"
+				, LAST_NAME 			AS "lastName"
+				, GENDER 				AS "gender"
+				
+				, ADDRESS 				AS "address"
+				, EMAIL_ADDRESS 		AS "emailAddress"
+				, JOIN_DATE 			AS "joinDate"
+				, EMPLOYEE_POSITION 	AS "employeePosition"
+				, EMPLOYEE_SALARY 		AS "employeeSalary"
+			FROM EMPLOYEES
+			WHERE EMAIL_ADDRESS = #{emailAddress}
+		]]>
+	</select>
+	
+</mapper>
