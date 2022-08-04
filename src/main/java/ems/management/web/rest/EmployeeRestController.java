@@ -4,12 +4,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.spel.ast.BooleanLiteral;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.web.header.Header;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ems.management.Util.EncryptUtil;
+import ems.management.Util.ResponseUtil;
 import ems.management.Util.TokenUtil;
 import ems.management.Util.ValidateUtil;
 import ems.management.Util.exception.NotFoundException;
@@ -148,5 +153,23 @@ public class EmployeeRestController {
 		responseData.put("token"    , token);
 		
 		return responseData;
+	}
+	
+	@GetMapping("/employeeDetail")
+	@ResponseBody
+	public ResponseUtil retrieveUserDetail( @RequestHeader HttpHeaders httpHeaders, 
+			@RequestParam("emailAddress") String emailAddress ) {
+		
+		ResponseUtil responseUtil = new ResponseUtil();
+		
+		EmployeeModel employeeModel = new EmployeeModel();
+		employeeModel.setEmailAddress(emailAddress);
+		EmployeeModel employeeDetail = employeeImp.retrieveEmployeeDetail(employeeModel);
+		
+		responseUtil.setRequestHeader( httpHeaders );
+		responseUtil.setStatusCode( HttpStatus.OK.value() );
+		responseUtil.setMessage( HttpStatus.OK.getReasonPhrase() );
+		responseUtil.setBody( employeeDetail );
+		return responseUtil;
 	}
 }
